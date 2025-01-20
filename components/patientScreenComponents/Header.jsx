@@ -7,9 +7,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 export default function Header({ patientName, patientId, onPress }) {
 
-    //#1Todo: Patient name and Patient Id both will come from the login Screen
-    //#2 Figure out how to transfer data from one screen to another
-
+   
     return (
         <View style={styles.container}>
             <View style={styles.profileSection}>
@@ -18,7 +16,7 @@ export default function Header({ patientName, patientId, onPress }) {
                     style={styles.profileImage}
                 />
                 <View style={styles.textContainer}>
-                    <Text style={styles.welcomeText}>Welcome,</Text>
+                    <Text style={styles.welcomeText}>Welcome, </Text>
                     <Text style={styles.nameText}>{patientName}</Text>
                     <Text style={styles.idText}>Patient ID : {patientId}</Text>
                 </View>
@@ -43,6 +41,7 @@ const styles = StyleSheet.create({
     profileSection: {
         flexDirection: 'row',
         alignItems: 'center',
+        marginHorizontal: 0,
     },
     profileImage: {
         width: 80,
@@ -52,19 +51,20 @@ const styles = StyleSheet.create({
     },
     textContainer: {
         flex: 1,
+        alignItems: 'center',
     },
     welcomeText: {
-        fontSize: 16,
-        color: '#333',
+        fontSize: 18,
+        color: '#000',
     },
     nameText: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
-        color: '#333',
+        color: '#000',
     },
     idText: {
         fontSize: 14,
-        color: '#555',
+        color: '#333',
         marginTop: 4,
     },
     history_Icon_n_Text: {

@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
         color: '#333',
     },
     recordButton: {
-        width: 150,
-        height: 150,
+        width: 120,
+        height: 120,
         borderRadius: 80,
         backgroundColor: '#008B8B',
         justifyContent: 'center',

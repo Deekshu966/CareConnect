@@ -5,24 +5,41 @@ import Input from '../../components/signScreenComponents/input'
 import Button from '../../components/Button';
 import { router } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-/*
-
-This is the Nurse sign-in screen please handle back-end keeping this in mind because copy of this same code is used for Patient sign-in
-
-
-*/
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 export default function LoginScreen() {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        // Handle login logic here
-        console.log('Login attempted with:', { id, password });
-        router.push('/(screens)/nurseScreen')
+    const handleLogin = async () => {
+       try {
+            const response = await fetch('http://localhost:5000/api/nurses/login', {
+                method : 'POST',
+                headers : {
+                    'Content-Type' : 'application/json',
+                },
+                body : JSON.stringify({ id, password }),
+            });
+
+            const data = await response.json();
+
+            if (response.status === 200) {
+                console.log('Login successful:', data);                    
+
+                // Store nurse ID and name in AsyncStorage
+                await AsyncStorage.setItem('nurseId', data.nurseId);
+                await AsyncStorage.setItem('nurseName', data.name);
+                 
+                router.push('/(screens)/nurseScreen'); // Navigate to the patient screen
+            } else {
+                console.warn('Login failed:', data.message);
+                alert(data.message);
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+            alert('Something went wrong. Please try again.');
+        }
     };
 
     const handleForgotPassword = () => {
@@ -45,7 +62,7 @@ export default function LoginScreen() {
                 <Text style={styles.subtitle}>Login in with your credentials</Text>
                 <View style={styles.form}>
                     <Input
-                        placeholder="Employee ID / Patient ID"
+                        placeholder="Employee ID"
                         value={id}
                         onChangeText={setId}
                     />

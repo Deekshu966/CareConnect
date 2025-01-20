@@ -3,12 +3,17 @@ import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const RequestItem = ({ item }) => {
+  const formattedDate = item.date.split('-').reverse().join('-');
   return (
     <View style={[styles.requestBox, item.topBox && styles.topBox]}>
       <Text style={styles.requestText}>{item.request}</Text>
       <View style={styles.timeContainer}>
+        <Icon name="calendar" size={14} color="#000" style={{ marginRight: 5 }} />
+        <Text style={styles.timeText}>{formattedDate}</Text>
+      </View>
+      <View style={styles.timeContainer}>
         <Icon name="clock-o" size={14} color="#000" style={{ marginRight: 5 }} />
-        <Text style={styles.timeText}>{`${item.time}   ${item.date}`}</Text>
+        <Text style={styles.timeText}>{item.time}</Text>
       </View>
     </View>
   );

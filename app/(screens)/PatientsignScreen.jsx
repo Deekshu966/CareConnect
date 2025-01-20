@@ -5,32 +5,40 @@ import Input from '../../components/signScreenComponents/input'
 import Button from '../../components/Button';
 import { router } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-/*
-
-This is the Patient sign-in screen please handle back-end keeping this in mind because copy of this same code is used for Nurse sign-in
-
-
-*/
-
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        // Handle login logic here
-        console.log('Login attempted with:', { id, password });
-        router.push('/(screens)/patientScreen')
-    };
+    const handleLogin = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/patients/login', {
+                method : 'POST',
+                headers : {
+                    'Content-Type' : 'application/json',
+                },
+                body : JSON.stringify({ id, password }),
+            });
 
-    const handleForgotPassword = () => {
-        // Handle forgot password logic here 
+            const data = await response.json();
 
-        // change this proper logic
-        router.push('/(screens)/forgotPasswordScreen')
-        console.log('Forgot password pressed');
+            if (response.status === 200) {
+                console.log('Login successful:', data);
+
+                // Store patient ID and name in AsyncStorage
+                await AsyncStorage.setItem('patientId', data.patientId);
+                await AsyncStorage.setItem('patientName', data.name);
+                 
+                router.push('/(screens)/patientScreen'); // Navigate to the patient screen
+            } else {
+                console.warn('Login failed:', data.message);
+                alert(data.message);
+            }
+        } catch (error) {
+            console.error('Error during login:', error);
+            alert('Something went wrong. Please try again.');
+        }
     };
 
     return (
@@ -45,7 +53,7 @@ export default function LoginScreen() {
                 <Text style={styles.subtitle}>Login in with your credentials</Text>
                 <View style={styles.form}>
                     <Input
-                        placeholder="Employee ID / Patient ID"
+                        placeholder="Patient ID"
                         value={id}
                         onChangeText={setId}
                     />
@@ -55,13 +63,11 @@ export default function LoginScreen() {
                         onChangeText={setPassword}
                         secureTextEntry
                     />
-                    <TouchableOpacity
-                        onPress={handleForgotPassword}
-                        style={styles.forgotPassword}
-                    >
-                        <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-                    </TouchableOpacity>
-                </View>
+                     {/* Hint text below the password input */}
+                     <Text style={styles.hintText}>
+                        Hint : Fill your DoB as password
+                    </Text>
+                    </View>
 
                 <View style={styles.footer}>
                     <Button title="Continue" onPress={handleLogin} />
@@ -108,14 +114,11 @@ const styles = StyleSheet.create({
         width: '100%',
         marginTop: 16,
     },
-    forgotPassword: {
-        marginTop: 15,
-        marginBottom: 32,
-        alignItems: 'center'
-    },
-    forgotPasswordText: {
-        color: '#666',
-        fontSize: 14,
+    hintText: {
+        fontSize: 13,
+        color: '#888',
+        marginTop: -6.9,
+        textAlign: 'center',
     },
     footer: {
         position: 'absolute',

@@ -55,13 +55,12 @@ export default function DateSelector() {
 
 const styles = StyleSheet.create({
     wrapper: {
-        marginVertical: 0, // Removes unnecessary vertical space
-        paddingVertical: 5, // Optional: Adjust as needed
-        backgroundColor: '#97D5CD', // Optional background to match the header theme
+        paddingVertical: 0, 
+        alignItems: 'center',
     },
     container: {
         flexGrow: 0,
-        marginVertical: 0, // Ensures no additional margin between dates and header
+        marginVertical: 0, 
     },
     dateItem: {
         alignItems: 'center',

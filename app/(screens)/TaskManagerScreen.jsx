@@ -37,10 +37,10 @@ export default function TaskManagerScreen() {
   const renderTask = ({ item }) => (
       <View style={styles.taskBox}>
           <View style={{ flex: 1 }}>
-              <Text style={styles.text}>Room: {item.room}</Text>
-              <Text style={styles.text}>Bed: {item.bed}</Text>
-              <Text style={styles.text}>Request: {item.request}</Text>
-              <Text style={styles.text}>Urgent: {item.isUrgent ? 'Yes' : 'No'}</Text>
+              <Text style={styles.text}>Room : {item.room}</Text>
+              <Text style={styles.text}>Bed : {item.bed}</Text>
+              <Text style={styles.text}>Request : {item.request}</Text>
+              <Text style={styles.text}>Urgent : {item.isUrgent ? 'Yes' : 'No'}</Text>
           </View>
           <TouchableOpacity onPress={() => deleteTask(item)} style={styles.deleteButton}>
               <Icon name="trash" size={20} color="#fff" />
@@ -90,22 +90,23 @@ const styles = StyleSheet.create({
     taskBox: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#90EE90',
         padding: 15,
         borderRadius: 10,
         marginBottom: 10,
         elevation: 3,
+        marginHorizontal: 60,
     },
     text: {
         fontSize: 16,
-        color: '#fff',
+        color: '#000',
         marginBottom: 5,
         fontWeight: '500',
     },
     deleteButton: {
-        marginLeft: 10,
+        marginLeft: 20,
         backgroundColor: '#FF6347',
-        padding: 10,
+        padding: 15,
         borderRadius: 50,
         justifyContent: 'center',
         alignItems: 'center',

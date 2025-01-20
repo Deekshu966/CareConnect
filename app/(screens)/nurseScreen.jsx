@@ -17,9 +17,7 @@ export default function NurseDashboardScreen() {
 
               
                 const initialTasks = [
-                    { room: 'Room 203', bed: 'Bed-8', request: 'Requested water', isUrgent: false },
-                    { room: 'Room 107', bed: 'Bed-17', request: 'Requested bandages', isUrgent: false },
-                    { room: 'Room 106', bed: 'Bed-23', request: 'Chest pain check-up', isUrgent: true },
+                 
                 ];
 
                

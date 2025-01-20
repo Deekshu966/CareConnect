@@ -34,32 +34,36 @@ export default function Header({ name, employeeId, department, wardNo }) {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#90EE90',
-        padding: 20,
+        padding: 40,
         borderBottomLeftRadius: 20,
         borderBottomRightRadius: 20,
         maxHeight: 400,
     },
     profileSection: {
         flexDirection: 'row',
-        alignItems: 'right',
+        alignItems: 'center',
+        marginHorizontal: 0,
     },
     profileImage: {
         width: 100,
         height: 100,
         borderRadius: 30,
-        marginRight: 15,
+        marginRight: 0,
+        marginHorizontal: 0,
     },
     detailsSection: {
         flex: 1,
+        alignItems: 'center',
     },
     welcomeText: {
-        fontSize: 16,
-        color: '#333',
+        fontSize: 18,
+        color: '#000',
     },
     nameText: {
-        fontSize: 24,
+        fontSize: 26,
         fontWeight: 'bold',
         color: '#333',
+        
     },
     detailTextText: {
         fontSize: 14,

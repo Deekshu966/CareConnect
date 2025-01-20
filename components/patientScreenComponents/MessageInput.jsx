@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 export default function MessageInput({ onSend }) {
     const [message, setMessage] = React.useState('');
@@ -15,7 +16,7 @@ export default function MessageInput({ onSend }) {
             setMessage(''); // Clear the input
         }
     };
-
+    
     return (
         <View style={styles.container}>
             <TextInput
@@ -30,39 +31,42 @@ export default function MessageInput({ onSend }) {
             <TouchableOpacity style={styles.sendButtonSmall} onPress={handleSend}>
                 <Text style={styles.sendButtonText}>Send</Text>
             </TouchableOpacity>
+           
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: 'row',
-        padding: 10,
+        padding: 20,
         alignItems: 'center',
     },
     input: {
         flex: 1,
         backgroundColor: '#f0f0f0',
         borderRadius: 10,
-        paddingHorizontal: 15,
+        paddingHorizontal: 25,
         paddingVertical: 10,
         maxHeight: 150,
+        marginHorizontal: 20,
+        marginBottom: 20,
+        width: 350, 
+        height: 80
     },
     sendButtonSmall: {
-        flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#008B8B',
-        padding: 8, // Reduced padding to make it smaller
-        borderRadius: 8, // Slightly smaller border radius
+        padding: 15, 
+        borderRadius: 8, 
         marginHorizontal: 10,
         marginBottom: 5,
-        width: 80, // Set a fixed width to reduce button size
-        height: 40
+        width: 150, 
+        height: 50
     },
     sendButtonText: {
-        fontSize: 16,
+        fontSize: 18,
         color: 'white',
         fontWeight: '500',
     },
-});
+   });

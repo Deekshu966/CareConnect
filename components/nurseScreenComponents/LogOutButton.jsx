@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 
 export default function LogoutButton() {
     const handleLogout = () => {
-        router.push('/(screens)/signScreen'); // Replace with your Sign In screen path
+        router.push('/(screens)/NursesignScreen'); // Replace with your Sign In screen path
         console.log('Logged out and navigating to Sign In screen');
     }; 
 
@@ -23,7 +23,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 15,
-        backgroundColor: '#E8F5E9',
         marginHorizontal: 20,
         marginVertical: 10,
         borderRadius: 10,
