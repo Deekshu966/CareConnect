@@ -17,31 +17,17 @@ export default function PatientHomeScreen() {
 
     useEffect(() => {
         const fetchPatientDetails = async () => {
+
+            // Instead of retrieving patientId from AsyncStorage, I have retriveved it from the patientDetails object
+            // This is because the patientId is already stored in the patientDetails object when the patient logs in
             try {
-                // Retrieve patient ID from AsyncStorage
-                //const name = await AsyncStorage.getItem('patientName');
-                //const id = await AsyncStorage.getItem('patientId');
-                
-                //if (name && id) {
-
-                    //setPatientName(name);
-                    //setPatientId(id);
-                
-                // Retrieve patient ID from AsyncStorage
-        const patientId = await AsyncStorage.getItem('patientId');
-        if (patientId) {
-            const response = await fetch(`http://localhost:5000/api/patients/${patientId}`);
-            const data = await response.json(); 
-            console.log("Fetched Patient Details:", data); 
-            
-            
-            setPatientDetails(data);    
-
-                } else {
-                    console.warn('No patient details found');
+                const storedDetails = await AsyncStorage.getItem('patientDetails');
+                if (storedDetails) {
+                    setPatientDetails(JSON.parse(storedDetails)); //convert the string back to an object
+                    console.log('the nurse data is :', patientDetails);
                 }
             } catch (error) {
-                console.error("Error fetching patient details:", error);
+                console.error('Error loading nurse details:', error);
             }
         };
 
@@ -91,7 +77,7 @@ export default function PatientHomeScreen() {
         <SafeAreaView style={styles.container}>
             <Header 
              patientName={patientDetails?.name || "Loading..."} 
-             patientId={patientDetails?.id || "Loading..."} 
+             patientId={patientDetails?.patientId || "Loading..."} 
              onPress={handleHistoryPress} 
             />
             <ScrollView contentContainerStyle={styles.scrollContent}>

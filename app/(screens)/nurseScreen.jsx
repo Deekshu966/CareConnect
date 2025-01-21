@@ -8,19 +8,26 @@ import LogoutButton from '../../components/nurseScreenComponents/LogOutButton';
 
 export default function NurseDashboardScreen() {
     const [tasks, setTasks] = useState([]);
+    const [nurseDetails, setNurseDetails] = useState(null);
 
     useEffect(() => {
+        const loadNurseDetails = async () => {
+            try {
+                const storedDetails = await AsyncStorage.getItem('nurseDetails');
+                if (storedDetails) {
+                    setNurseDetails(JSON.parse(storedDetails)); //convert the string back to an object
+                    console.log('the nurse data is :',nurseDetails);
+                }
+            } catch (error) {
+                console.error('Error loading nurse details:', error);
+            }
+        };
+
         const loadTasks = async () => {
             try {
-              
                 const completedTasks = JSON.parse(await AsyncStorage.getItem('completedTasks')) || [];
+                const initialTasks = []; // Fetch or define your tasks here
 
-              
-                const initialTasks = [
-                 
-                ];
-
-               
                 const filteredTasks = initialTasks.filter(
                     (task) =>
                         !completedTasks.some(
@@ -37,6 +44,7 @@ export default function NurseDashboardScreen() {
             }
         };
 
+        loadNurseDetails();
         loadTasks();
     }, []);
 
@@ -63,7 +71,16 @@ export default function NurseDashboardScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Header name="Ritika Singh" employeeId="1234" department="Nursing" wardNo="3" />
+            {nurseDetails ? (
+                <Header
+                    name={nurseDetails.name}
+                    employeeId={nurseDetails.nurseId}
+                    department={nurseDetails.department}
+                    wardNo={nurseDetails.wardNo}
+                />
+            ) : (
+                <Text>Loading nurse details...</Text>
+            )}
             <DateSelector />
             <TaskList tasks={tasks} onTaskComplete={handleTaskCompletion} />
             <LogoutButton />

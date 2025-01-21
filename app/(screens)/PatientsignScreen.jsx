@@ -26,11 +26,10 @@ export default function LoginScreen() {
             if (response.status === 200) {
                 console.log('Login successful:', data);
 
-                // Store patient ID and name in AsyncStorage
-                await AsyncStorage.setItem('patientId', data.patientId);
-                await AsyncStorage.setItem('patientName', data.name);
-                 
+                // Store patient data in AsyncStorage                
+                await AsyncStorage.setItem('patientDetails', JSON.stringify(data.patient));
                 router.push('/(screens)/patientScreen'); // Navigate to the patient screen
+
             } else {
                 console.warn('Login failed:', data.message);
                 alert(data.message);
