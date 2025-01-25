@@ -1,34 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import Logo from '../../components/logo';
 import Input from '../../components/signScreenComponents/input';
 import Button from '../../components/Button';
 import { router } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
 
+    // Verfiy if the Nurse is already logged in by checking token on local storage which is set after successful login
+    useEffect(() => {
+        const checkToken = async () => {
+            const token = await AsyncStorage.getItem('nursetoken');
+            if (token) {
+                router.push('/(screens)/nurseScreen');
+            }
+        };
+        checkToken();
+    }, []);
+
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/nurses/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ id, password }),
+            const response = await axios.post('http://192.168.45.108:5000/api/nurses/login', {
+                id,
+                password
             });
-
-            const data = await response.json();
+            const data = response.data;
             if (response.status === 200) {
-                console.log('Login successful:', data);
+                //extract the JWT token from the response
+                const nursetoken = data.nursetoken;
+
+                // Store the token in AsyncStorage
+                await AsyncStorage.setItem('nursetoken', nursetoken);
+                console.log('Login successful:');
 
                 // Store nurse details in AsyncStorage
-                await AsyncStorage.setItem('nurseDetails', JSON.stringify(data.nurse));
-
-                // Navigate to Nurse Dashboard
+                if (data.nurse) {
+                    await AsyncStorage.setItem('nurseDetails', JSON.stringify(data.nurse));
+                }
                 router.push('/(screens)/nurseScreen');
             } else {
                 console.warn('Login failed:', data.message);
@@ -39,7 +52,6 @@ export default function LoginScreen() {
             alert('Something went wrong. Please try again.');
         }
     };
-
     const handleForgotPassword = () => {
         router.push('/(screens)/forgotPasswordScreen');
     };

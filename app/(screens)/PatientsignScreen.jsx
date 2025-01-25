@@ -1,35 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, SafeAreaView } from 'react-native';
 import Logo from '../../components/logo';
 import Input from '../../components/signScreenComponents/input'
 import Button from '../../components/Button';
 import { router } from 'expo-router';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
     const [id, setId] = useState('');
     const [password, setPassword] = useState('');
 
+    // Verfiy if the Patient is already logged in by checking token on local storage which is set after successful login
+    useEffect(() => {
+        const checkToken = async () => {
+            const token = await AsyncStorage.getItem('patienttoken');
+            if (token) {
+                router.push('/(screens)/patientScreen');
+            }
+        };
+        checkToken();
+    }, []);
+
     const handleLogin = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/patients/login', {
-                method : 'POST',
-                headers : {
-                    'Content-Type' : 'application/json',
-                },
-                body : JSON.stringify({ id, password }),
-            });
-
-            const data = await response.json();
-
+            const response = await axios.post('http://192.168.45.108:5000/api/patients/login', { id, password });
+            const data = response.data;
             if (response.status === 200) {
-                console.log('Login successful:', data);
+                const patienttoken = data.patienttoken;
+                await AsyncStorage.setItem('patienttoken', patienttoken);
+                console.log('Login successful:', response);
 
-                // Store patient data in AsyncStorage                
                 await AsyncStorage.setItem('patientDetails', JSON.stringify(data.patient));
-                router.push('/(screens)/patientScreen'); // Navigate to the patient screen
-
+                router.push('/(screens)/patientScreen');
             } else {
                 console.warn('Login failed:', data.message);
                 alert(data.message);
@@ -62,11 +66,11 @@ export default function LoginScreen() {
                         onChangeText={setPassword}
                         secureTextEntry
                     />
-                     {/* Hint text below the password input */}
-                     <Text style={styles.hintText}>
+                    {/* Hint text below the password input */}
+                    <Text style={styles.hintText}>
                         Hint : Fill your DoB as password
                     </Text>
-                    </View>
+                </View>
 
                 <View style={styles.footer}>
                     <Button title="Continue" onPress={handleLogin} />
