@@ -1,13 +1,60 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
+import * as Permissions from 'expo-permissions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function VoiceRecorder() {
     const [isRecording, setIsRecording] = useState(false);
+    const [permissionGranted, setPermissionGranted] = useState(false);
 
-    const toggleRecording = () => {
-        setIsRecording(!isRecording);
-        // Add actual recording logic here
+    useEffect(() => {
+        // Check if permission was previously granted
+        const checkPermissionStatus = async () => {
+            const granted = await AsyncStorage.getItem('audioPermissionGranted');
+            if (granted === 'true') {
+                setPermissionGranted(true);
+            }
+        };
+        checkPermissionStatus();
+    }, []);
+
+    const requestPermission = async () => {
+        try {
+            if (!permissionGranted) {
+                const { status } = await Permissions.askAsync(Permissions.AUDIO_RECORDING);
+                if (status === 'granted') {
+                    await AsyncStorage.setItem('audioPermissionGranted', 'true');
+                    setPermissionGranted(true);
+                    return true;
+                } else {
+                    Alert.alert(
+                        'Permission Required',
+                        'This app requires microphone access to record voice. Please enable it in your settings.',
+                        [
+                            { text: 'Cancel', style: 'cancel' },
+                            {
+                                text: 'Open Settings',
+                                onPress: () => Permissions.openSettings(),
+                            },
+                        ]
+                    );
+                    return false;
+                }
+            }
+            return true; // Permission already granted
+        } catch (error) {
+            console.error('Error requesting microphone permissions:', error);
+            return false;
+        }
+    };
+
+    const toggleRecording = async () => {
+        const hasPermission = await requestPermission();
+        if (hasPermission) {
+            setIsRecording(!isRecording);
+            // Add actual recording logic here
+        }
     };
 
     return (
@@ -26,7 +73,7 @@ export default function VoiceRecorder() {
             <Text style={styles.helpText}>Tap to start recording</Text>
         </View>
     );
-};
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -58,4 +105,3 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
 });
-
