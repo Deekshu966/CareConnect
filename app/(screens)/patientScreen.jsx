@@ -52,39 +52,39 @@ export default function PatientHomeScreen() {
     const handleSendMessage = async (newRequest) => {
         try {
             const response = await fetch('http://localhost:5000/api/requests', {
-              method : 'POST',
-              headers : {'Content-Type' : 'application/json'},
-              body : JSON.stringify(newRequest),
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newRequest),
             });
-            if(!response.ok) {
-                throw new Error ('Failed to save the request to the database');
+            if (!response.ok) {
+                throw new Error('Failed to save the request to the database');
             }
 
-        const updatedRequests = [newRequest, ...requests]; 
-        setRequests(updatedRequests);
+            const updatedRequests = [newRequest, ...requests];
+            setRequests(updatedRequests);
 
-        await AsyncStorage.setItem('requestHistory', JSON.stringify(updatedRequests)); // Save to AsyncStorage
-        console.log("Request saved : ", newRequest);
-    }
+            await AsyncStorage.setItem('requestHistory', JSON.stringify(updatedRequests)); // Save to AsyncStorage
+            console.log("Request saved : ", newRequest);
+        }
         catch (error) {
-        console.error("Error sending request to backend:", error);
-        Alert.alert("Error", "Failed to send the request. Please try again.");
-      }
+            console.error("Error sending request to backend:", error);
+            Alert.alert("Error", "Failed to send the request. Please try again.");
+        }
     };
 
-    
+
     return (
         <SafeAreaView style={styles.container}>
-            <Header 
-             patientName={patientDetails?.name || "Loading..."} 
-             patientId={patientDetails?.patientId || "Loading..."} 
-             onPress={handleHistoryPress} 
+            <Header
+                patientName={patientDetails?.name || "Loading..."}
+                patientId={patientDetails?.patientId || "Loading..."}
+                onPress={handleHistoryPress}
             />
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 <DateSelector />
                 <VoiceRecorder />
                 <MessageInput onSend={handleSendMessage} />
-             </ScrollView>
+            </ScrollView>
             <LogoutButton />
         </SafeAreaView>
     );
